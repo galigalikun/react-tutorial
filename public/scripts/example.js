@@ -9,6 +9,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+;
 
 class Comment extends React.Component {
   rawMarkup() {
@@ -36,6 +37,7 @@ class CommentBox extends React.Component {
     this.loadCommentsFromServer = this.loadCommentsFromServer.bind(this);
     this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
 
+    this.handler = null;
     this.state = { data: [] };
   }
   loadCommentsFromServer() {
@@ -74,10 +76,14 @@ class CommentBox extends React.Component {
     });
   }
 
-  // DOM構築完了!!Lifecycle
+  // ComponentがDOMツリーに追加された状態で呼ばれるのでDOMに関わる初期化処理を行いたい時に便利です。
   componentDidMount() {
     this.loadCommentsFromServer();
-    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    this.handler = window.setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+  }
+  // ComponentがDOMから削除される時に呼ばれます。
+  componentWillUnmount() {
+    window.clearInterval(this.handler);
   }
   render() {
     return (
@@ -159,5 +165,5 @@ const commonBox = <CommentBox url="/api/comments" pollInterval={2000} />;
 
 ReactDOM.render(
   commonBox,
-  document.getElementById('content')
+  document.querySelector('#content')
 );
