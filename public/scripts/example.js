@@ -125,7 +125,11 @@ class CommentForm extends React.Component {
   }
 
   handleAuthorChange(e) {
+    console.log("handleAuthorChange:" + e.target.value);
     this.setState({ author: e.target.value });
+  }
+  handleAuthorInput(e) {
+    console.log("handleAuthorInput:" + e.target.value);
   }
   handleTextChange(e) {
     this.setState({ text: e.target.value });
@@ -146,8 +150,9 @@ class CommentForm extends React.Component {
         <input
           type="text"
           placeholder="Your name"
-          value={this.state.author}
+          value={this.state.author || "default name"}
           onChange={this.handleAuthorChange}
+          onInput={this.handleAuthorInput}
         />
         <input
           type="text"
